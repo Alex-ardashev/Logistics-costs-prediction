@@ -475,11 +475,13 @@ with mlflow.start_run(run_name='xgb_best_model'):
 
 # COMMAND ----------
 
-# Example of finding best run
+# Search all runs in the current experiment
 runs = mlflow.search_runs()
-best_run = runs.sort_values('start_time', ascending=False).iloc[0]
-# 'metrics.rmse_xgb_test', ascending=True).iloc[0]
+best_run = runs.sort_values('metrics.rmse_xgb_test', ascending=True).iloc[0]
 best_run_id = best_run.run_id
+
+print(f"Best Run ID: {best_run_id}")
+print(f"Best RMSE: {best_run['metrics.rmse_xgb_test']}")
 
 display(best_run)
 # Display metrics
@@ -496,12 +498,6 @@ model_uri = 'runs:/{run_id}/model'.format(
 
 mlflow.register_model(model_uri, f"{CATALOG_NAME}.{SCHEMA_NAME}.xgb_best_model")
 
-# COMMAND ----------
-
-
-model_uri = 'runs:/{run_id}/model'.format(
-    run_id='d6cb6283ad0746279ef5259c5e2abda'
-)
 # Set alias for the new version
 client = mlflow.tracking.MlflowClient()
 
